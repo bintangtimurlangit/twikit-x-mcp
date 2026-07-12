@@ -28,6 +28,7 @@ Run:
 from __future__ import annotations
 
 import asyncio
+import json
 import os
 from typing import Any, Literal
 
@@ -35,6 +36,7 @@ from mcp.server.fastmcp import FastMCP
 
 from twikit import Client
 
+from .ratelimit import RateLimiter
 from .serialization import (
     message_to_dict,
     paginated,
@@ -51,6 +53,11 @@ mcp = FastMCP('twikit')
 _client: Client | None = None
 _client_lock = asyncio.Lock()
 
+# Shared client-side rate limiter. Enabled by default; configured from the
+# environment (TWIKIT_MCP_RATE_LIMIT / TWIKIT_MCP_RATE_LIMIT_PER_MINUTE). Every
+# tool acquires the client via get_client(), so gating there throttles them all.
+_rate_limiter = RateLimiter.from_env()
+
 
 class AuthError(RuntimeError):
     pass
@@ -59,9 +66,13 @@ class AuthError(RuntimeError):
 async def get_client() -> Client:
     """Return a logged-in :class:`twikit.Client`, creating it on first use.
 
+    Also enforces the shared rate limit: because every tool starts by awaiting
+    this function, throttling here paces all tool calls with one choke point.
     Serialised behind a lock so concurrent tool calls don't race the one-time
     login.
     """
+    await _rate_limiter.acquire()
+
     global _client
     if _client is not None:
         return _client
@@ -74,28 +85,55 @@ async def get_client() -> Client:
         proxy = os.environ.get('TWIKIT_PROXY') or None
         client = Client(language=language, proxy=proxy)
 
-        cookies_file = os.environ.get('TWIKIT_COOKIES_FILE')
-        auth_1 = os.environ.get('TWIKIT_AUTH_INFO_1')
-        password = os.environ.get('TWIKIT_PASSWORD')
-
-        if cookies_file and os.path.exists(cookies_file) and not (auth_1 and password):
-            client.load_cookies(cookies_file)
-        elif auth_1 and password:
-            await client.login(
-                auth_info_1=auth_1,
-                auth_info_2=os.environ.get('TWIKIT_AUTH_INFO_2'),
-                password=password,
-                totp_secret=os.environ.get('TWIKIT_TOTP_SECRET'),
-                cookies_file=cookies_file,
-            )
-        else:
-            raise AuthError(
-                'No credentials configured. Set TWIKIT_COOKIES_FILE, or '
-                'TWIKIT_AUTH_INFO_1 + TWIKIT_PASSWORD in the environment.'
-            )
+        await _authenticate(client)
 
         _client = client
         return _client
+
+
+async def _authenticate(client: Client) -> None:
+    """Authenticate ``client`` from environment variables.
+
+    Precedence (most reliable first):
+      1. TWIKIT_AUTH_TOKEN + TWIKIT_CT0  — cookies copied from a logged-in
+         browser. Recommended: X's automated login often hits Cloudflare / a
+         browser-verification challenge, so pasting these two cookies is the most
+         dependable way to authenticate.
+      2. TWIKIT_COOKIES                  — full cookie jar as a raw JSON string.
+      3. TWIKIT_COOKIES_FILE             — path to a saved twikit cookie file.
+      4. TWIKIT_AUTH_INFO_1 + TWIKIT_PASSWORD — programmatic login (may trigger
+         2FA / email / captcha challenges that can't be answered over stdio).
+    """
+    auth_token = os.environ.get('TWIKIT_AUTH_TOKEN')
+    ct0 = os.environ.get('TWIKIT_CT0')
+    raw_cookies = os.environ.get('TWIKIT_COOKIES')
+    cookies_file = os.environ.get('TWIKIT_COOKIES_FILE')
+    auth_1 = os.environ.get('TWIKIT_AUTH_INFO_1')
+    password = os.environ.get('TWIKIT_PASSWORD')
+
+    if auth_token and ct0:
+        client.set_cookies({'auth_token': auth_token, 'ct0': ct0})
+    elif raw_cookies:
+        try:
+            client.set_cookies(json.loads(raw_cookies))
+        except json.JSONDecodeError as e:
+            raise AuthError(f'TWIKIT_COOKIES is not valid JSON: {e}')
+    elif cookies_file and os.path.exists(cookies_file):
+        client.load_cookies(cookies_file)
+    elif auth_1 and password:
+        await client.login(
+            auth_info_1=auth_1,
+            auth_info_2=os.environ.get('TWIKIT_AUTH_INFO_2'),
+            password=password,
+            totp_secret=os.environ.get('TWIKIT_TOTP_SECRET'),
+            cookies_file=cookies_file,
+        )
+    else:
+        raise AuthError(
+            'No credentials configured. Set TWIKIT_AUTH_TOKEN + TWIKIT_CT0 '
+            '(recommended — copy them from your browser cookies for x.com), or '
+            'TWIKIT_COOKIES_FILE, or TWIKIT_AUTH_INFO_1 + TWIKIT_PASSWORD.'
+        )
 
 
 # --------------------------------------------------------------------------- #
@@ -107,6 +145,20 @@ async def whoami() -> dict:
     client = await get_client()
     user_id = await client.user_id()
     return {'user_id': user_id}
+
+
+@mcp.tool()
+async def rate_limit_status() -> dict:
+    """Report the current client-side rate-limit configuration.
+
+    Does not require auth and does not consume a rate-limit token. Configure via
+    TWIKIT_MCP_RATE_LIMIT (on/off) and TWIKIT_MCP_RATE_LIMIT_PER_MINUTE.
+    """
+    return {
+        'enabled': _rate_limiter.enabled,
+        'calls_per_minute': _rate_limiter.rate if _rate_limiter.enabled else None,
+        'description': _rate_limiter.describe(),
+    }
 
 
 # --------------------------------------------------------------------------- #
