@@ -41,3 +41,41 @@ include = ["twikit*", "twikit_mcp*"]
 
 [tool.setuptools.package-data]
 twikit = ["py.typed"]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.8",
+    "mypy>=1.13",
+    "pytest>=8",
+    "pre-commit>=4",
+    "commitizen>=4",
+]
+
+# ── Tooling ──────────────────────────────────────────────────────────────────
+# The vendored twikit/ is upstream code and is excluded from lint/format/type
+# checks — only our own twikit_mcp/ and tests/ are checked.
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+# twikit/ is vendored upstream code; don't lint or reformat it.
+extend-exclude = ["twikit"]
+
+[tool.ruff.lint]
+# E/F (pycodestyle+pyflakes), I (isort), UP (pyupgrade). `B` (bugbear) is left
+# for a later cleanup pass — it flags a few idiomatic fixes in existing code.
+select = ["E", "F", "I", "UP"]
+
+[tool.mypy]
+python_version = "3.10"
+files = ["twikit_mcp"]
+ignore_missing_imports = true
+# The vendored twikit/ is upstream code — don't report its internal type errors.
+follow_imports = "silent"
+exclude = ["twikit/"]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "v$version"
+version_scheme = "semver"
+version = "0.1.0"

@@ -2,6 +2,7 @@
 
 Run with:  python -m twikit_mcp
 """
-from .server import mcp, main
 
-__all__ = ['mcp', 'main']
+from .server import main, mcp
+
+__all__ = ["mcp", "main"]

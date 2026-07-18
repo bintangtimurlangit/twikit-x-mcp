@@ -10,6 +10,7 @@ tuned or fully disabled via environment variables:
 
 Set ``TWIKIT_MCP_RATE_LIMIT=off`` (or 0/false/no) to remove throttling entirely.
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -18,7 +19,7 @@ import time
 
 DEFAULT_PER_MINUTE = 30.0
 
-_FALSEY = {'0', 'false', 'off', 'no', 'disable', 'disabled', ''}
+_FALSEY = {"0", "false", "off", "no", "disable", "disabled", ""}
 
 
 def _env_enabled(name: str, default: bool) -> bool:
@@ -69,13 +70,13 @@ class RateLimiter:
 
     def describe(self) -> str:
         if not self.enabled:
-            return 'rate limiting: disabled'
-        return f'rate limiting: {self.rate:g} calls / {self.per:g}s'
+            return "rate limiting: disabled"
+        return f"rate limiting: {self.rate:g} calls / {self.per:g}s"
 
     @classmethod
-    def from_env(cls) -> 'RateLimiter':
-        enabled = _env_enabled('TWIKIT_MCP_RATE_LIMIT', True)
-        raw = os.environ.get('TWIKIT_MCP_RATE_LIMIT_PER_MINUTE')
+    def from_env(cls) -> RateLimiter:
+        enabled = _env_enabled("TWIKIT_MCP_RATE_LIMIT", True)
+        raw = os.environ.get("TWIKIT_MCP_RATE_LIMIT_PER_MINUTE")
         try:
             rate = float(raw) if raw is not None else DEFAULT_PER_MINUTE
         except ValueError:

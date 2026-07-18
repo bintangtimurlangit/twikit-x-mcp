@@ -1,0 +1,59 @@
+name: Bug report
+description: A tool returns an error, wrong data, or stops working
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. This wraps **twikit** to drive Twitter / X through a cookie session, so a tool can break when X changes its site or when cookies expire. Details help a lot.
+  - type: dropdown
+    id: tool-group
+    attributes:
+      label: Which tool?
+      options:
+        - Session (whoami, rate_limit_status)
+        - Users (get_user, search_users, follow_user, …)
+        - Tweets — read (get_tweet, search_tweets, get_home_timeline, …)
+        - Tweets — write (post_tweet, delete_tweet, like_tweet, retweet, …)
+        - Trends (get_trends)
+        - Direct messages (send_direct_message, get_dm_history)
+        - Auth / cookies
+        - Other / not sure
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you call, what did you expect, and what did you get? Paste the error/traceback (redact anything private).
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How installed
+      options:
+        - uvx
+        - pipx
+        - pip
+        - from a clone
+    validations:
+      required: true
+  - type: input
+    id: client
+    attributes:
+      label: MCP client
+      placeholder: 'e.g. Claude Code / Claude Desktop / Cursor'
+  - type: input
+    id: python
+    attributes:
+      label: Python version
+      placeholder: 'e.g. 3.11 (python --version)'
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I confirmed `TWIKIT_AUTH_TOKEN` and `TWIKIT_CT0` are set and current
+        - label: I checked `rate_limit_status` (in case it was throttling)
+        - label: I searched existing issues for a duplicate

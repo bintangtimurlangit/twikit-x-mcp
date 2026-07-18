@@ -25,12 +25,13 @@ Optional:
 Run:
     python -m twikit_mcp
 """
+
 from __future__ import annotations
 
 import asyncio
 import json
 import os
-from typing import Any, Literal
+from typing import Literal
 
 from mcp.server.fastmcp import FastMCP
 
@@ -45,7 +46,7 @@ from .serialization import (
     user_to_dict,
 )
 
-mcp = FastMCP('twikit')
+mcp = FastMCP("twikit")
 
 # --------------------------------------------------------------------------- #
 # Lazily-initialised, shared authenticated client
@@ -81,8 +82,8 @@ async def get_client() -> Client:
         if _client is not None:
             return _client
 
-        language = os.environ.get('TWIKIT_LANGUAGE', 'en-US')
-        proxy = os.environ.get('TWIKIT_PROXY') or None
+        language = os.environ.get("TWIKIT_LANGUAGE", "en-US")
+        proxy = os.environ.get("TWIKIT_PROXY") or None
         client = Client(language=language, proxy=proxy)
 
         await _authenticate(client)
@@ -104,35 +105,35 @@ async def _authenticate(client: Client) -> None:
       4. TWIKIT_AUTH_INFO_1 + TWIKIT_PASSWORD — programmatic login (may trigger
          2FA / email / captcha challenges that can't be answered over stdio).
     """
-    auth_token = os.environ.get('TWIKIT_AUTH_TOKEN')
-    ct0 = os.environ.get('TWIKIT_CT0')
-    raw_cookies = os.environ.get('TWIKIT_COOKIES')
-    cookies_file = os.environ.get('TWIKIT_COOKIES_FILE')
-    auth_1 = os.environ.get('TWIKIT_AUTH_INFO_1')
-    password = os.environ.get('TWIKIT_PASSWORD')
+    auth_token = os.environ.get("TWIKIT_AUTH_TOKEN")
+    ct0 = os.environ.get("TWIKIT_CT0")
+    raw_cookies = os.environ.get("TWIKIT_COOKIES")
+    cookies_file = os.environ.get("TWIKIT_COOKIES_FILE")
+    auth_1 = os.environ.get("TWIKIT_AUTH_INFO_1")
+    password = os.environ.get("TWIKIT_PASSWORD")
 
     if auth_token and ct0:
-        client.set_cookies({'auth_token': auth_token, 'ct0': ct0})
+        client.set_cookies({"auth_token": auth_token, "ct0": ct0})
     elif raw_cookies:
         try:
             client.set_cookies(json.loads(raw_cookies))
         except json.JSONDecodeError as e:
-            raise AuthError(f'TWIKIT_COOKIES is not valid JSON: {e}')
+            raise AuthError(f"TWIKIT_COOKIES is not valid JSON: {e}")
     elif cookies_file and os.path.exists(cookies_file):
         client.load_cookies(cookies_file)
     elif auth_1 and password:
         await client.login(
             auth_info_1=auth_1,
-            auth_info_2=os.environ.get('TWIKIT_AUTH_INFO_2'),
+            auth_info_2=os.environ.get("TWIKIT_AUTH_INFO_2"),
             password=password,
-            totp_secret=os.environ.get('TWIKIT_TOTP_SECRET'),
+            totp_secret=os.environ.get("TWIKIT_TOTP_SECRET"),
             cookies_file=cookies_file,
         )
     else:
         raise AuthError(
-            'No credentials configured. Set TWIKIT_AUTH_TOKEN + TWIKIT_CT0 '
-            '(recommended — copy them from your browser cookies for x.com), or '
-            'TWIKIT_COOKIES_FILE, or TWIKIT_AUTH_INFO_1 + TWIKIT_PASSWORD.'
+            "No credentials configured. Set TWIKIT_AUTH_TOKEN + TWIKIT_CT0 "
+            "(recommended — copy them from your browser cookies for x.com), or "
+            "TWIKIT_COOKIES_FILE, or TWIKIT_AUTH_INFO_1 + TWIKIT_PASSWORD."
         )
 
 
@@ -144,7 +145,7 @@ async def whoami() -> dict:
     """Return the authenticated account's own user id (confirms the session works)."""
     client = await get_client()
     user_id = await client.user_id()
-    return {'user_id': user_id}
+    return {"user_id": user_id}
 
 
 @mcp.tool()
@@ -155,9 +156,9 @@ async def rate_limit_status() -> dict:
     TWIKIT_MCP_RATE_LIMIT (on/off) and TWIKIT_MCP_RATE_LIMIT_PER_MINUTE.
     """
     return {
-        'enabled': _rate_limiter.enabled,
-        'calls_per_minute': _rate_limiter.rate if _rate_limiter.enabled else None,
-        'description': _rate_limiter.describe(),
+        "enabled": _rate_limiter.enabled,
+        "calls_per_minute": _rate_limiter.rate if _rate_limiter.enabled else None,
+        "description": _rate_limiter.describe(),
     }
 
 
@@ -168,7 +169,7 @@ async def rate_limit_status() -> dict:
 async def get_user(screen_name: str) -> dict:
     """Look up a user profile by @handle (screen name), e.g. "jack"."""
     client = await get_client()
-    user = await client.get_user_by_screen_name(screen_name.lstrip('@'))
+    user = await client.get_user_by_screen_name(screen_name.lstrip("@"))
     return user_to_dict(user)
 
 
@@ -191,7 +192,7 @@ async def search_users(query: str, count: int = 20, cursor: str | None = None) -
 @mcp.tool()
 async def get_user_tweets(
     user_id: str,
-    tweet_type: Literal['Tweets', 'Replies', 'Media', 'Likes'] = 'Tweets',
+    tweet_type: Literal["Tweets", "Replies", "Media", "Likes"] = "Tweets",
     count: int = 40,
     cursor: str | None = None,
 ) -> dict:
@@ -238,7 +239,7 @@ async def block_user(user_id: str) -> dict:
     """Block the account with the given user id."""
     client = await get_client()
     await client.block_user(user_id)
-    return {'ok': True, 'user_id': user_id, 'action': 'block'}
+    return {"ok": True, "user_id": user_id, "action": "block"}
 
 
 @mcp.tool()
@@ -246,7 +247,7 @@ async def mute_user(user_id: str) -> dict:
     """Mute the account with the given user id."""
     client = await get_client()
     await client.mute_user(user_id)
-    return {'ok': True, 'user_id': user_id, 'action': 'mute'}
+    return {"ok": True, "user_id": user_id, "action": "mute"}
 
 
 # --------------------------------------------------------------------------- #
@@ -263,7 +264,7 @@ async def get_tweet(tweet_id: str) -> dict:
 @mcp.tool()
 async def search_tweets(
     query: str,
-    product: Literal['Top', 'Latest', 'Media'] = 'Latest',
+    product: Literal["Top", "Latest", "Media"] = "Latest",
     count: int = 20,
     cursor: str | None = None,
 ) -> dict:
@@ -278,13 +279,13 @@ async def search_tweets(
 
 @mcp.tool()
 async def get_home_timeline(
-    kind: Literal['for_you', 'following'] = 'for_you',
+    kind: Literal["for_you", "following"] = "for_you",
     count: int = 20,
     cursor: str | None = None,
 ) -> dict:
     """Get the authenticated user's home timeline ('for_you' or 'following')."""
     client = await get_client()
-    if kind == 'following':
+    if kind == "following":
         result = await client.get_latest_timeline(count=count, cursor=cursor)
     else:
         result = await client.get_timeline(count=count, cursor=cursor)
@@ -319,9 +320,7 @@ async def post_tweet(
     """Post a tweet. Set ``reply_to`` to a tweet id to reply. ``is_note_tweet``
     allows long-form (>280 char) posts on eligible accounts."""
     client = await get_client()
-    tweet = await client.create_tweet(
-        text=text, reply_to=reply_to, is_note_tweet=is_note_tweet
-    )
+    tweet = await client.create_tweet(text=text, reply_to=reply_to, is_note_tweet=is_note_tweet)
     return tweet_to_dict(tweet)
 
 
@@ -330,7 +329,7 @@ async def delete_tweet(tweet_id: str) -> dict:
     """Delete one of your own tweets by id."""
     client = await get_client()
     await client.delete_tweet(tweet_id)
-    return {'ok': True, 'tweet_id': tweet_id, 'action': 'delete'}
+    return {"ok": True, "tweet_id": tweet_id, "action": "delete"}
 
 
 @mcp.tool()
@@ -338,7 +337,7 @@ async def like_tweet(tweet_id: str) -> dict:
     """Like (favorite) a tweet by id."""
     client = await get_client()
     await client.favorite_tweet(tweet_id)
-    return {'ok': True, 'tweet_id': tweet_id, 'action': 'like'}
+    return {"ok": True, "tweet_id": tweet_id, "action": "like"}
 
 
 @mcp.tool()
@@ -346,7 +345,7 @@ async def unlike_tweet(tweet_id: str) -> dict:
     """Remove your like from a tweet by id."""
     client = await get_client()
     await client.unfavorite_tweet(tweet_id)
-    return {'ok': True, 'tweet_id': tweet_id, 'action': 'unlike'}
+    return {"ok": True, "tweet_id": tweet_id, "action": "unlike"}
 
 
 @mcp.tool()
@@ -354,7 +353,7 @@ async def retweet(tweet_id: str) -> dict:
     """Retweet a tweet by id."""
     client = await get_client()
     await client.retweet(tweet_id)
-    return {'ok': True, 'tweet_id': tweet_id, 'action': 'retweet'}
+    return {"ok": True, "tweet_id": tweet_id, "action": "retweet"}
 
 
 @mcp.tool()
@@ -362,7 +361,7 @@ async def undo_retweet(tweet_id: str) -> dict:
     """Undo a retweet by tweet id."""
     client = await get_client()
     await client.delete_retweet(tweet_id)
-    return {'ok': True, 'tweet_id': tweet_id, 'action': 'undo_retweet'}
+    return {"ok": True, "tweet_id": tweet_id, "action": "undo_retweet"}
 
 
 @mcp.tool()
@@ -370,7 +369,7 @@ async def bookmark_tweet(tweet_id: str) -> dict:
     """Bookmark a tweet by id."""
     client = await get_client()
     await client.bookmark_tweet(tweet_id)
-    return {'ok': True, 'tweet_id': tweet_id, 'action': 'bookmark'}
+    return {"ok": True, "tweet_id": tweet_id, "action": "bookmark"}
 
 
 # --------------------------------------------------------------------------- #
@@ -378,13 +377,13 @@ async def bookmark_tweet(tweet_id: str) -> dict:
 # --------------------------------------------------------------------------- #
 @mcp.tool()
 async def get_trends(
-    category: Literal['trending', 'for-you', 'news', 'sports', 'entertainment'] = 'trending',
+    category: Literal["trending", "for-you", "news", "sports", "entertainment"] = "trending",
     count: int = 20,
 ) -> dict:
     """Get current trends for a category."""
     client = await get_client()
     trends = await client.get_trends(category, count=count)
-    return {'items': [trend_to_dict(t) for t in trends], 'count': len(trends)}
+    return {"items": [trend_to_dict(t) for t in trends], "count": len(trends)}
 
 
 # --------------------------------------------------------------------------- #
@@ -411,5 +410,5 @@ def main() -> None:
     mcp.run()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -1,5 +1,10 @@
 # twikit-mcp
 
+[![license](https://img.shields.io/github/license/bintangtimurlangit/twikit-mcp?style=flat-square)](LICENSE)
+[![CI](https://img.shields.io/github/actions/workflow/status/bintangtimurlangit/twikit-mcp/ci.yml?branch=main&style=flat-square)](https://github.com/bintangtimurlangit/twikit-mcp/actions)
+[![Python](https://img.shields.io/badge/python-3.10%2B-3776ab?style=flat-square&logo=python&logoColor=white)](pyproject.toml)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-twikit--mcp-24292f?style=flat-square&logo=github)](https://github.com/bintangtimurlangit/twikit-mcp)
+
 An **MCP (Model Context Protocol) server** that lets an AI assistant — Claude
 Desktop, Claude Code, Cursor, or any MCP client — read and act on **Twitter / X**
 through a single authenticated session. **No official X API key required.**
@@ -17,6 +22,8 @@ It exposes twikit's capabilities as clean, model-friendly MCP tools.
 > because the published twikit is currently broken on X (the `Couldn't get
 > KEY_BYTE indices` login bug). The patch only fixes login. When upstream ships a
 > fix, the bundled copy can be dropped in favour of the PyPI `twikit` package.
+
+**Full reference:** [Documentation](./docs/README.md) · **Setup:** [INSTALL.md](INSTALL.md) · **Changelog:** [CHANGELOG.md](./CHANGELOG.md) · **Versioning & releases:** [docs/RELEASES.md](./docs/RELEASES.md)
 
 ---
 
@@ -38,6 +45,17 @@ It exposes twikit's capabilities as clean, model-friendly MCP tools.
 
 Paginating tools return `{ "items": [...], "count": N, "next_cursor": "..." }`;
 pass `next_cursor` back in to page.
+
+### Tool annotations
+
+Per the [MCP annotations spec](https://modelcontextprotocol.io/) — side effects at a glance. Write tools act on your **real** account.
+
+| Tools | Read-only | Idempotent | Destructive |
+|-------|:---------:|:----------:|:-----------:|
+| `whoami`, `rate_limit_status`, `get_user`, `get_user_by_id`, `search_users`, `get_user_tweets`, `get_user_followers`, `get_user_following`, `get_tweet`, `search_tweets`, `get_home_timeline`, `get_retweeters`, `get_favoriters`, `get_trends`, `get_dm_history` | ✓ | ✓ | – |
+| `follow_user` / `unfollow_user`, `block_user`, `mute_user`, `like_tweet` / `unlike_tweet`, `retweet` / `undo_retweet`, `bookmark_tweet` | – | ✓ | – |
+| `post_tweet`, `send_direct_message` | – | – | – |
+| `delete_tweet` | – | ✓ | ✓ |
 
 ---
 
@@ -136,6 +154,18 @@ You normally won't run it by hand — your MCP client launches it. See
 
 ---
 
+## Troubleshooting
+
+| Symptom | Likely cause / fix |
+|---|---|
+| `Couldn't get KEY_BYTE indices` on login | The published twikit's login bug — this repo bundles a patched copy under `twikit/`, so make sure you're running this package, not a separate `twikit` install. |
+| Auth errors / `401` / empty `whoami` | `TWIKIT_AUTH_TOKEN` or `TWIKIT_CT0` is missing, wrong, or expired. Re-copy both cookies from a logged-in x.com browser session. |
+| Frequent rate-limit errors | Throttling is on by default (30/min). Check `rate_limit_status`; lower `TWIKIT_MCP_RATE_LIMIT_PER_MINUTE`, or slow down. Aggressive use can get an account suspended. |
+| A "verify you're human" / Cloudflare challenge | Use the cookie method (above) rather than username/password login. |
+| Server not found by the client | Verify the `command`/`args` (uvx/pipx/pip) and that `TWIKIT_*` env vars are in the client's `env` block — see [INSTALL.md](INSTALL.md). |
+
+---
+
 ## Responsible use
 
 Automating X may violate its Terms of Service and can get accounts rate-limited
@@ -151,6 +181,8 @@ Contributions welcome! This project uses
 [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) for
 commits, PR titles and issue titles — see [CONTRIBUTING.md](CONTRIBUTING.md).
 
+**Security & conduct:** [SECURITY.md](SECURITY.md) · [Code of Conduct](CODE_OF_CONDUCT.md)
+
 ---
 
 ## Credits
@@ -161,3 +193,13 @@ commits, PR titles and issue titles — see [CONTRIBUTING.md](CONTRIBUTING.md).
   [`licenses/twikit-LICENSE.txt`](licenses/twikit-LICENSE.txt). ⭐ Please star the
   [original repo](https://github.com/d60/twikit).
 - This project (`twikit-mcp`) is MIT-licensed. See [`LICENSE`](LICENSE).
+
+---
+
+## Disclaimer
+
+This is an **unofficial** project. It is **not affiliated with, authorized, maintained, sponsored, or endorsed by X Corp. (Twitter)**.
+
+It authenticates as your own account using session cookies and drives X through **twikit** — an unofficial client — so a tool can break when X changes its site. Automating X may violate its Terms of Service and can get accounts rate-limited or suspended.
+
+You are responsible for using this software in compliance with [X's Terms of Service](https://x.com/en/tos) and applicable law. Use a purpose-made account, keep volume low, and don't use it for spam, harassment, or mass automation. All product names, logos, and brands are property of their respective owners.

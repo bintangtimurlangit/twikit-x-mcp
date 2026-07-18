@@ -1,6 +1,7 @@
 """
 Tests for the client-side rate limiter (enabled by default, toggleable).
 """
+
 import asyncio
 import time
 
@@ -44,17 +45,25 @@ def test_zero_rate_is_treated_as_disabled():
 
 def test_env_toggle_parsing():
     import os
-    for val, expected in [('off', False), ('0', False), ('false', False),
-                          ('no', False), ('on', True), ('1', True), ('30', True)]:
-        os.environ['TWIKIT_MCP_RATE_LIMIT'] = val
-        assert _env_enabled('TWIKIT_MCP_RATE_LIMIT', True) is expected, val
-    del os.environ['TWIKIT_MCP_RATE_LIMIT']
-    assert _env_enabled('TWIKIT_MCP_RATE_LIMIT', True) is True  # default
+
+    for val, expected in [
+        ("off", False),
+        ("0", False),
+        ("false", False),
+        ("no", False),
+        ("on", True),
+        ("1", True),
+        ("30", True),
+    ]:
+        os.environ["TWIKIT_MCP_RATE_LIMIT"] = val
+        assert _env_enabled("TWIKIT_MCP_RATE_LIMIT", True) is expected, val
+    del os.environ["TWIKIT_MCP_RATE_LIMIT"]
+    assert _env_enabled("TWIKIT_MCP_RATE_LIMIT", True) is True  # default
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
-        if name.startswith('test_') and callable(fn):
+        if name.startswith("test_") and callable(fn):
             fn()
-            print(f'ok  {name}')
-    print('all passed')
+            print(f"ok  {name}")
+    print("all passed")

@@ -1,0 +1,23 @@
+name: Feature request
+description: Suggest a new tool or an improvement
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: Describe the use case. What Twitter / X task would this enable?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: A new tool? A new argument? A different output? If it maps to a twikit capability, link it.
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope check
+      options:
+        - label: This fits the project's scope — exposing twikit over MCP for a **single, personal** account (not spam or mass automation)
+        - label: If it's a library-level capability, I considered contributing it upstream to [twikit](https://github.com/d60/twikit)
