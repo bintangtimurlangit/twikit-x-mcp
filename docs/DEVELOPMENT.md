@@ -3,8 +3,8 @@
 ## Setup
 
 ```bash
-git clone https://github.com/bintangtimurlangit/twikit-mcp
-cd twikit-mcp
+git clone https://github.com/bintangtimurlangit/twikit-x-mcp
+cd twikit-x-mcp
 uv sync --extra dev          # or: pip install -e ".[dev]"
 pre-commit install && pre-commit install --hook-type commit-msg
 ```
@@ -15,16 +15,16 @@ pre-commit install && pre-commit install --hook-type commit-msg
 | ----------------------------- | -------------------------------------------------------------- |
 | `uv run ruff check .`         | Lint (`--fix` to auto-fix)                                      |
 | `uv run ruff format .`        | Format (`--check` to verify)                                    |
-| `uv run mypy twikit_mcp`      | Type-check our code (advisory — see below)                     |
+| `uv run mypy twikit_x_mcp`      | Type-check our code (advisory — see below)                     |
 | `uv run pytest`               | Run the test suite                                             |
-| `python -m twikit_mcp`        | Run the server manually (or the `twikit-mcp` script)           |
+| `python -m twikit_x_mcp`        | Run the server manually (or the `twikit-x-mcp` script)           |
 
 ## Project layout
 
 ```
-twikit_mcp/
+twikit_x_mcp/
   __init__.py
-  __main__.py         # entry point (python -m twikit_mcp)
+  __main__.py         # entry point (python -m twikit_x_mcp)
   server.py           # MCP server + all tool definitions
   serialization.py    # twikit objects -> plain dicts for MCP responses
   ratelimit.py        # token-bucket throttle
@@ -39,7 +39,7 @@ tests/
 
 This repo **bundles a lightly patched copy of twikit** under `twikit/` (MIT, license preserved at `licenses/twikit-LICENSE.txt`), because the published twikit is currently broken on X (the `Couldn't get KEY_BYTE indices` login bug). The patch only fixes login. When upstream ships a fix, delete `twikit/` and depend on the PyPI `twikit` package instead.
 
-**Tooling excludes `twikit/`**: Ruff (`extend-exclude`) and mypy (`exclude`) only check our own `twikit_mcp/` and `tests/`.
+**Tooling excludes `twikit/`**: Ruff (`extend-exclude`) and mypy (`exclude`) only check our own `twikit_x_mcp/` and `tests/`.
 
 ## Type checking (advisory)
 

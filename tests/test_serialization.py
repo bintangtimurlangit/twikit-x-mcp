@@ -6,7 +6,7 @@ raise KeyError when X omits a field (issue #417). The serializers must degrade t
 None rather than propagate the error.
 """
 
-from twikit_mcp.serialization import paginated, tweet_to_dict, user_to_dict
+from twikit_x_mcp.serialization import paginated, tweet_to_dict, user_to_dict
 
 
 class FakeUser:

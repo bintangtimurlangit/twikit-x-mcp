@@ -1,9 +1,9 @@
-# twikit-mcp
+# twikit-x-mcp
 
-[![license](https://img.shields.io/github/license/bintangtimurlangit/twikit-mcp?style=flat-square)](LICENSE)
-[![CI](https://img.shields.io/github/actions/workflow/status/bintangtimurlangit/twikit-mcp/ci.yml?branch=main&style=flat-square)](https://github.com/bintangtimurlangit/twikit-mcp/actions)
+[![license](https://img.shields.io/github/license/bintangtimurlangit/twikit-x-mcp?style=flat-square)](LICENSE)
+[![CI](https://img.shields.io/github/actions/workflow/status/bintangtimurlangit/twikit-x-mcp/ci.yml?branch=main&style=flat-square)](https://github.com/bintangtimurlangit/twikit-x-mcp/actions)
 [![Python](https://img.shields.io/badge/python-3.10%2B-3776ab?style=flat-square&logo=python&logoColor=white)](pyproject.toml)
-[![GitHub Repo](https://img.shields.io/badge/GitHub-twikit--mcp-24292f?style=flat-square&logo=github)](https://github.com/bintangtimurlangit/twikit-mcp)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-twikit--x--mcp-24292f?style=flat-square&logo=github)](https://github.com/bintangtimurlangit/twikit-x-mcp)
 
 An **MCP (Model Context Protocol) server** that lets an AI assistant — Claude
 Desktop, Claude Code, Cursor, or any MCP client — read and act on **Twitter / X**
@@ -61,32 +61,32 @@ Per the [MCP annotations spec](https://modelcontextprotocol.io/) — side effect
 
 ## Install
 
-`twikit-mcp` is a **Python** package. The easiest way to run it is with
+Published on PyPI as **`twikit-x-mcp`** (the `-x` because plain `twikit-mcp` was
+already taken by another project). The easiest way to run it is with
 [`uv`](https://docs.astral.sh/uv/)'s `uvx` (the Python equivalent of `npx` —
 downloads and runs in one step, nothing to install first):
 
 ```bash
-uvx --from git+https://github.com/bintangtimurlangit/twikit-mcp twikit-mcp
+uvx twikit-x-mcp
 ```
 
 Alternatives:
 
 ```bash
 # pipx (isolated install)
-pipx install git+https://github.com/bintangtimurlangit/twikit-mcp
+pipx install twikit-x-mcp
 
 # plain pip
-pip install git+https://github.com/bintangtimurlangit/twikit-mcp
+pip install twikit-x-mcp
 
 # from a clone (for development)
-git clone https://github.com/bintangtimurlangit/twikit-mcp
-cd twikit-mcp && pip install -e .
+git clone https://github.com/bintangtimurlangit/twikit-x-mcp
+cd twikit-x-mcp && pip install -e .
 ```
 
-> **Why `git+…` and not `pip install twikit-mcp`?** It isn't published to PyPI
-> yet — installing straight from GitHub is the current path. (The package is
-> self-contained: twikit is bundled in, so there are no external Git
-> dependencies to resolve.)
+> **Note:** the Python import module is `twikit_x_mcp` (underscore), per Python
+> convention. The distribution is self-contained — twikit is bundled in, so there
+> are no external Git dependencies to resolve.
 
 ---
 
@@ -146,7 +146,7 @@ Call the `rate_limit_status` tool to see the active configuration.
 ## Run manually
 
 ```bash
-python -m twikit_mcp      # or:  twikit-mcp
+python -m twikit_x_mcp      # or:  twikit-x-mcp
 ```
 
 You normally won't run it by hand — your MCP client launches it. See
@@ -192,7 +192,7 @@ commits, PR titles and issue titles — see [CONTRIBUTING.md](CONTRIBUTING.md).
   under [`twikit/`](twikit/); its license is preserved at
   [`licenses/twikit-LICENSE.txt`](licenses/twikit-LICENSE.txt). ⭐ Please star the
   [original repo](https://github.com/d60/twikit).
-- This project (`twikit-mcp`) is MIT-licensed. See [`LICENSE`](LICENSE).
+- This project (`twikit-x-mcp`) is MIT-licensed. See [`LICENSE`](LICENSE).
 
 ---
 

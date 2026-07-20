@@ -23,7 +23,7 @@ Optional:
                          after login and reused on subsequent runs.
 
 Run:
-    python -m twikit_mcp
+    python -m twikit_x_mcp
 """
 
 from __future__ import annotations

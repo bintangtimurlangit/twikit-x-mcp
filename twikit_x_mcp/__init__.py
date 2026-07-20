@@ -1,6 +1,6 @@
 """MCP (Model Context Protocol) server exposing twikit's Twitter/X capabilities.
 
-Run with:  python -m twikit_mcp
+Run with:  python -m twikit_x_mcp
 """
 
 from .server import main, mcp

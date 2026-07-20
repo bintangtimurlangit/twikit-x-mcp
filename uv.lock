@@ -1887,7 +1887,7 @@ wheels = [
 ]
 
 [[package]]
-name = "twikit-mcp"
+name = "twikit-x-mcp"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [

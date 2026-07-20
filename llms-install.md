@@ -1,17 +1,17 @@
 # llms-install.md — install spec for AI agents
 
-You are an AI assistant setting up the **twikit-mcp** server for a user in an MCP
+You are an AI assistant setting up the **twikit-x-mcp** server for a user in an MCP
 client that this project does **not** have a hand-written guide for (e.g. Zed,
 Antigravity, Cline, Roo, or any other). Follow this spec to configure it. Do not
 skip the authentication step.
 
 ## What this server is
 
-- Name: `twikit-mcp`. A Python MCP server that controls Twitter/X via the
+- Name: `twikit-x-mcp`. A Python MCP server that controls Twitter/X via the
   `twikit` library. No official X API key.
 - Transport: **stdio** (the client launches the process; communication is over
   stdin/stdout).
-- Source: `git+https://github.com/bintangtimurlangit/twikit-mcp`
+- Source: `git+https://github.com/bintangtimurlangit/twikit-x-mcp`
 
 ## Launch command
 
@@ -19,15 +19,15 @@ Preferred (zero-install, requires [`uv`](https://docs.astral.sh/uv/)):
 
 ```
 command: uvx
-args:    ["--from", "git+https://github.com/bintangtimurlangit/twikit-mcp", "twikit-mcp"]
+args:    ["twikit-x-mcp"]
 ```
 
 If `uv`/`uvx` is unavailable, install first
-(`pip install git+https://github.com/bintangtimurlangit/twikit-mcp` or the pipx
+(`pip install twikit-x-mcp` or the pipx
 equivalent) and then:
 
 ```
-command: twikit-mcp   (or)   command: python   args: ["-m", "twikit_mcp"]
+command: twikit-x-mcp   (or)   command: python   args: ["-m", "twikit_x_mcp"]
 ```
 
 ## Environment variables
@@ -64,7 +64,7 @@ client's schema.
   "mcpServers": {
     "twikit": {
       "command": "uvx",
-      "args": ["--from", "git+https://github.com/bintangtimurlangit/twikit-mcp", "twikit-mcp"],
+      "args": ["twikit-x-mcp"],
       "env": {
         "TWIKIT_AUTH_TOKEN": "<auth_token cookie>",
         "TWIKIT_CT0": "<ct0 cookie>"
@@ -84,7 +84,7 @@ client's schema.
   wraps the launch in a `command` object:
   `{"twikit": {"command": {"path": "uvx", "args": [...], "env": {...}}}}`.
 - **CLI-driven (Claude Code):**
-  `claude mcp add twikit --env TWIKIT_AUTH_TOKEN=<auth_token> --env TWIKIT_CT0=<ct0> -- uvx --from git+https://github.com/bintangtimurlangit/twikit-mcp twikit-mcp`
+  `claude mcp add twikit --env TWIKIT_AUTH_TOKEN=<auth_token> --env TWIKIT_CT0=<ct0> -- uvx twikit-x-mcp`
 
 General rule: you need to express four things in the client's own format —
 (1) a **stdio** server, (2) `command` = `uvx`, (3) `args` as above,
@@ -94,7 +94,7 @@ General rule: you need to express four things in the client's own format —
 
 1. Detect the client and locate its MCP config file (or CLI).
 2. Ensure `uv` is installed; if not, either install it or fall back to a
-   `pip`/`pipx` install and use `command: twikit-mcp`.
+   `pip`/`pipx` install and use `command: twikit-x-mcp`.
 3. Ask the user for their `auth_token` and `ct0` cookies (guide them through the
    3 steps above) — you cannot obtain these yourself.
 4. Write the server entry in the client's schema with the correct env.

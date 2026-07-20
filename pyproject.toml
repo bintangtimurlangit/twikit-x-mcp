@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "twikit-mcp"
+name = "twikit-x-mcp"
 version = "0.1.0"
 description = "MCP server exposing twikit's Twitter/X capabilities to AI assistants — no official API key required."
 readme = "README.md"
@@ -30,14 +30,14 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/bintangtimurlangit/twikit-mcp"
+Homepage = "https://github.com/bintangtimurlangit/twikit-x-mcp"
 "twikit (original library)" = "https://github.com/d60/twikit"
 
 [project.scripts]
-twikit-mcp = "twikit_mcp.server:main"
+twikit-x-mcp = "twikit_x_mcp.server:main"
 
 [tool.setuptools.packages.find]
-include = ["twikit*", "twikit_mcp*"]
+include = ["twikit*", "twikit_x_mcp*"]
 
 [tool.setuptools.package-data]
 twikit = ["py.typed"]
@@ -53,7 +53,7 @@ dev = [
 
 # ── Tooling ──────────────────────────────────────────────────────────────────
 # The vendored twikit/ is upstream code and is excluded from lint/format/type
-# checks — only our own twikit_mcp/ and tests/ are checked.
+# checks — only our own twikit_x_mcp/ and tests/ are checked.
 
 [tool.ruff]
 line-length = 100
@@ -68,7 +68,7 @@ select = ["E", "F", "I", "UP"]
 
 [tool.mypy]
 python_version = "3.10"
-files = ["twikit_mcp"]
+files = ["twikit_x_mcp"]
 ignore_missing_imports = true
 # The vendored twikit/ is upstream code — don't report its internal type errors.
 follow_imports = "silent"

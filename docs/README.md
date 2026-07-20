@@ -1,6 +1,6 @@
-# twikit-mcp documentation
+# twikit-x-mcp documentation
 
-**twikit-mcp** is a [Model Context Protocol](https://modelcontextprotocol.io/) server that exposes **[twikit](https://github.com/d60/twikit)'s** Twitter / X capabilities to AI assistants over **stdio** — no official X API key required. For Claude Code, Claude Desktop, Cursor, Windsurf, VS Code, and other MCP hosts.
+**twikit-x-mcp** is a [Model Context Protocol](https://modelcontextprotocol.io/) server that exposes **[twikit](https://github.com/d60/twikit)'s** Twitter / X capabilities to AI assistants over **stdio** — no official X API key required. For Claude Code, Claude Desktop, Cursor, Windsurf, VS Code, and other MCP hosts.
 
 | Document                            | Description                                                                                         |
 | ----------------------------------- | -------------------------------------------------------------------------------------------------- |

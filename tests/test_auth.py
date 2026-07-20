@@ -9,7 +9,7 @@ hits a Cloudflare / browser-verification challenge.
 import asyncio
 import os
 
-import twikit_mcp.server as server
+import twikit_x_mcp.server as server
 
 
 class FakeClient:

@@ -1,4 +1,4 @@
-# Installing twikit-mcp in your MCP client
+# Installing twikit-x-mcp in your MCP client
 
 Copy-paste setup for the most common clients. If yours isn't here, hand your AI
 assistant [`llms-install.md`](llms-install.md) and it can wire up any MCP client
@@ -17,7 +17,7 @@ from the spec.
 Every example runs the server with `uvx` (no manual install). Make sure
 [`uv`](https://docs.astral.sh/uv/getting-started/installation/) is installed
 (`curl -LsSf https://astral.sh/uv/install.sh | sh`), or swap `uvx --from
-git+… twikit-mcp` for a `pip`-installed `twikit-mcp` command.
+git+… twikit-x-mcp` for a `pip`-installed `twikit-x-mcp` command.
 
 ---
 
@@ -51,7 +51,7 @@ Replace `YOUR_AUTH_TOKEN` and `YOUR_CT0` with the values from Step 1.
 claude mcp add twikit \
   --env TWIKIT_AUTH_TOKEN=YOUR_AUTH_TOKEN \
   --env TWIKIT_CT0=YOUR_CT0 \
-  -- uvx --from git+https://github.com/bintangtimurlangit/twikit-mcp twikit-mcp
+  -- uvx twikit-x-mcp
 ```
 
 Add `-s user` to make it available in every project. Check with `claude mcp
@@ -69,7 +69,7 @@ Edit the config (Settings → Developer → Edit Config, or directly):
   "mcpServers": {
     "twikit": {
       "command": "uvx",
-      "args": ["--from", "git+https://github.com/bintangtimurlangit/twikit-mcp", "twikit-mcp"],
+      "args": ["twikit-x-mcp"],
       "env": {
         "TWIKIT_AUTH_TOKEN": "YOUR_AUTH_TOKEN",
         "TWIKIT_CT0": "YOUR_CT0"
@@ -90,7 +90,7 @@ Create `~/.cursor/mcp.json` (global) or `.cursor/mcp.json` (this project only):
   "mcpServers": {
     "twikit": {
       "command": "uvx",
-      "args": ["--from", "git+https://github.com/bintangtimurlangit/twikit-mcp", "twikit-mcp"],
+      "args": ["twikit-x-mcp"],
       "env": {
         "TWIKIT_AUTH_TOKEN": "YOUR_AUTH_TOKEN",
         "TWIKIT_CT0": "YOUR_CT0"
@@ -111,7 +111,7 @@ Edit `~/.codeium/windsurf/mcp_config.json`:
   "mcpServers": {
     "twikit": {
       "command": "uvx",
-      "args": ["--from", "git+https://github.com/bintangtimurlangit/twikit-mcp", "twikit-mcp"],
+      "args": ["twikit-x-mcp"],
       "env": {
         "TWIKIT_AUTH_TOKEN": "YOUR_AUTH_TOKEN",
         "TWIKIT_CT0": "YOUR_CT0"
@@ -132,7 +132,7 @@ field):
     "twikit": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["--from", "git+https://github.com/bintangtimurlangit/twikit-mcp", "twikit-mcp"],
+      "args": ["twikit-x-mcp"],
       "env": {
         "TWIKIT_AUTH_TOKEN": "YOUR_AUTH_TOKEN",
         "TWIKIT_CT0": "YOUR_CT0"

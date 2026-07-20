@@ -34,7 +34,7 @@ This server uses **stdio**. The typical entry runs it via `uvx` (no install step
   "mcpServers": {
     "twikit": {
       "command": "uvx",
-      "args": ["--from", "git+https://github.com/bintangtimurlangit/twikit-mcp", "twikit-mcp"],
+      "args": ["twikit-x-mcp"],
       "env": {
         "TWIKIT_AUTH_TOKEN": "…",
         "TWIKIT_CT0": "…"

@@ -5,7 +5,7 @@ Tests for the client-side rate limiter (enabled by default, toggleable).
 import asyncio
 import time
 
-from twikit_mcp.ratelimit import RateLimiter, _env_enabled
+from twikit_x_mcp.ratelimit import RateLimiter, _env_enabled
 
 
 def test_disabled_is_noop_and_fast():

@@ -2,7 +2,7 @@ MIT License
 
 Copyright (c) 2026 bintangtimurlangit
 
-This project (twikit-mcp) is an MCP server built on top of "twikit"
+This project (twikit-x-mcp) is an MCP server built on top of "twikit"
 (https://github.com/d60/twikit), Copyright (c) 2024 d60, also MIT-licensed.
 A patched copy of twikit is bundled in this repository under twikit/; its
 original MIT license and copyright notice are retained at

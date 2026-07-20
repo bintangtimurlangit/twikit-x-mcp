@@ -1,4 +1,4 @@
-# Contributing to twikit-mcp
+# Contributing to twikit-x-mcp
 
 Thanks for helping out! A few lightweight conventions keep the history and
 tracker readable.
