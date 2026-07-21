@@ -5,6 +5,43 @@
 [![Python](https://img.shields.io/badge/python-3.10%2B-3776ab?style=flat-square&logo=python&logoColor=white)](pyproject.toml)
 [![GitHub Repo](https://img.shields.io/badge/GitHub-twikit--x--mcp-24292f?style=flat-square&logo=github)](https://github.com/bintangtimurlangit/twikit-x-mcp)
 
+### TimelineCursor compatibility
+
+X recently changed the structure of `TimelineTimelineCursor` responses.
+
+Previous format:
+
+```json
+content.itemContent.value
+```
+
+Current format:
+
+```json
+content.value
+```
+
+This fork adds a compatibility layer that transparently supports both formats through an internal helper:
+
+```python
+Client._extract_cursor_value()
+```
+
+This prevents:
+
+```
+KeyError: 'itemContent'
+```
+
+when retrieving long-form posts using:
+
+```python
+await client.get_tweet_by_id(...)
+```
+
+The patch is fully backward compatible.
+
+
 An **MCP (Model Context Protocol) server** that lets an AI assistant — Claude
 Desktop, Claude Code, Cursor, or any MCP client — read and act on **Twitter / X**
 through a single authenticated session. **No official X API key required.**
