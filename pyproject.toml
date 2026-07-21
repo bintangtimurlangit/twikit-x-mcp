@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "twikit-x-mcp"
-version = "0.1.0"
+version = "0.1.1"
 description = "MCP server exposing twikit's Twitter/X capabilities to AI assistants — no official API key required."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -78,4 +78,4 @@ exclude = ["twikit/"]
 name = "cz_conventional_commits"
 tag_format = "v$version"
 version_scheme = "semver"
-version = "0.1.0"
+version = "0.1.1"

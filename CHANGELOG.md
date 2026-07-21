@@ -6,6 +6,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Ver
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-07-22
+
+### Fixed
+
+- Pagination cursors are read from both the current `content.value` shape and the legacy `content.itemContent.value` shape used by X. Retrieving long-form posts via `get_tweet_by_id()` no longer raises `KeyError: 'itemContent'`. Thanks to [@demzzz310](https://github.com/demzzz310) for the diagnosis and fix.
+- The nested "show more replies" cursor, which wraps under `item` rather than `content`, is read through the same compatibility path.
+- An explicit `null` `content` on a cursor entry no longer raises `AttributeError`.
+
 ## [0.1.0] - 2026-07-21
 
 ### Added
@@ -20,5 +28,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Ver
 
 - The PyPI distribution, GitHub repository, and CLI command are named `twikit-x-mcp`. The Python import module is `twikit_x_mcp`.
 
-[Unreleased]: https://github.com/bintangtimurlangit/twikit-x-mcp/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/bintangtimurlangit/twikit-x-mcp/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/bintangtimurlangit/twikit-x-mcp/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/bintangtimurlangit/twikit-x-mcp/releases/tag/v0.1.0
